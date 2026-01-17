@@ -1,14 +1,12 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
   <title>Lernkarten</title>
 
-  <!-- PWA -->
   <link rel="manifest" href="manifest.json">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
-  <!-- Styles -->
   <link rel="stylesheet" href="style.css">
 
   <!-- MathJax (LaTeX) -->
@@ -20,55 +18,88 @@
   </script>
   <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
 </head>
-<body>
 
+<body>
 <header>
   <h1>📚 Lernkarten</h1>
 </header>
 
+<nav class="tabs">
+  <button id="tabCreateBtn" class="tab active" type="button">Karten erstellen</button>
+  <button id="tabLearnBtn" class="tab" type="button">Lernen</button>
+</nav>
+
 <main>
-  <!-- Karte erstellen -->
-  <section>
+  <!-- TAB: CREATE -->
+  <section id="tabCreate" class="tab-panel active">
     <h2>Karte erstellen</h2>
 
-    <label>Frage (Text / LaTeX):</label>
-    <textarea id="qText"></textarea>
+    <div class="grid2">
+      <div class="panel">
+        <label>Frage (Text / LaTeX):</label>
+        <textarea id="qText" placeholder="z.B. $\\int_0^1 x^2\\,dx$"></textarea>
 
-    <label>Frage-Bild:</label>
-    <input type="file" id="qImage" accept="image/*">
+        <label>Frage-Bild:</label>
+        <input type="file" id="qImage" accept="image/*">
 
-    <label>Lösung (Text / LaTeX):</label>
-    <textarea id="aText"></textarea>
-
-    <label>Lösungs-Bild:</label>
-    <input type="file" id="aImage" accept="image/*">
-
-    <button onclick="saveCard()">💾 Karte speichern</button>
-  </section>
-
-  <hr>
-
-  <!-- Lernen -->
-  <section>
-    <h2>Lernen</h2>
-    <button onclick="nextCard()">▶ Nächste Karte</button>
-
-    <div class="card">
-      <div class="card-side">
-        <h3>Frage</h3>
-        <div id="learnQuestion" class="latex"></div>
-        <img id="learnQImg">
+        <div class="previewWrap">
+          <img id="qPreview" class="previewImg" alt="">
+          <div id="qPreviewEmpty" class="previewEmpty">(kein Frage-Bild)</div>
+        </div>
       </div>
 
-      <div class="card-side">
-        <h3>Lösung</h3>
-        <div id="learnAnswer" class="latex"></div>
-        <img id="learnAImg">
+      <div class="panel">
+        <label>Lösung (Text / LaTeX):</label>
+        <textarea id="aText" placeholder="z.B. $\\frac{1}{3}$"></textarea>
+
+        <label>Lösungs-Bild:</label>
+        <input type="file" id="aImage" accept="image/*">
+
+        <div class="previewWrap">
+          <img id="aPreview" class="previewImg" alt="">
+          <div id="aPreviewEmpty" class="previewEmpty">(kein Lösungs-Bild)</div>
+        </div>
       </div>
     </div>
-  </section>
-</main>
 
-<script src="app.js"></script>
-</body>
-</html>
+    <div class="row">
+      <button id="saveBtn" type="button">💾 Karte speichern</button>
+      <button id="clearBtn" type="button" class="secondary">Felder leeren</button>
+      <div class="muted" id="countLabel"></div>
+    </div>
+
+    <p class="hint">
+      iPad + Apple Pencil: In Textfeldern kannst du oft mit Pencil schreiben (Scribble) → iPad wandelt das in Text um.
+      Für echte Handschrift als Zeichnung nutze im Lern-Tab das Handschrift-Pad.
+    </p>
+  </section>
+
+  <!-- TAB: LEARN -->
+  <section id="tabLearn" class="tab-panel">
+    <h2>Lernen</h2>
+
+    <div class="row">
+      <button id="nextBtn" type="button">▶ Nächste Frage</button>
+      <button id="solutionBtn" type="button" class="secondary" disabled>✅ Lösung anzeigen</button>
+      <button id="clearAnswerBtn" type="button" class="secondary" disabled>Antwort leeren</button>
+      <div class="muted" id="learnStatus"></div>
+    </div>
+
+    <div class="learnLayout">
+      <!-- Frage -->
+      <div class="panel">
+        <h3>Frage</h3>
+        <div id="learnQuestion" class="latex"></div>
+        <img id="learnQImg" class="bigImg" alt="">
+        <div id="learnQImgEmpty" class="previewEmpty">(kein Frage-Bild)</div>
+      </div>
+
+      <!-- Deine Antwort -->
+      <div class="panel">
+        <h3>Deine Antwort</h3>
+
+        <label>Tippen (oder iPad Scribble):</label>
+        <textarea id="userAnswer" placeholder="Antwort eingeben..."></textarea>
+
+        <details>
+          <summary><strong>Handschrift-Pad (Apple Pencil)
