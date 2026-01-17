@@ -6,7 +6,6 @@
 
   <link rel="manifest" href="manifest.json">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-
   <link rel="stylesheet" href="style.css">
 
   <!-- MathJax (LaTeX) -->
@@ -27,10 +26,11 @@
 <nav class="tabs">
   <button id="tabCreateBtn" class="tab active" type="button">Karten erstellen</button>
   <button id="tabLearnBtn" class="tab" type="button">Lernen</button>
+  <button id="tabManageBtn" class="tab" type="button">Verwalten</button>
 </nav>
 
 <main>
-  <!-- TAB: CREATE -->
+  <!-- CREATE TAB -->
   <section id="tabCreate" class="tab-panel active">
     <h2>Karte erstellen</h2>
 
@@ -67,14 +67,9 @@
       <button id="clearBtn" type="button" class="secondary">Felder leeren</button>
       <div class="muted" id="countLabel"></div>
     </div>
-
-    <p class="hint">
-      iPad + Apple Pencil: In Textfeldern kannst du oft mit Pencil schreiben (Scribble) → iPad wandelt das in Text um.
-      Für echte Handschrift als Zeichnung nutze im Lern-Tab das Handschrift-Pad.
-    </p>
   </section>
 
-  <!-- TAB: LEARN -->
+  <!-- LEARN TAB -->
   <section id="tabLearn" class="tab-panel">
     <h2>Lernen</h2>
 
@@ -86,7 +81,6 @@
     </div>
 
     <div class="learnLayout">
-      <!-- Frage -->
       <div class="panel">
         <h3>Frage</h3>
         <div id="learnQuestion" class="latex"></div>
@@ -94,16 +88,13 @@
         <div id="learnQImgEmpty" class="previewEmpty">(kein Frage-Bild)</div>
       </div>
 
-      <!-- Deine Antwort -->
       <div class="panel">
         <h3>Deine Antwort</h3>
-
         <label>Tippen (oder iPad Scribble):</label>
         <textarea id="userAnswer" placeholder="Antwort eingeben..."></textarea>
 
         <details>
           <summary><strong>Handschrift-Pad (Apple Pencil)</strong> – optional</summary>
-          <p class="muted">Hier kannst du frei schreiben/zeichnen. Beim Vergleich wird dein Bild angezeigt.</p>
           <canvas id="inkCanvas" width="900" height="320"></canvas>
           <div class="row">
             <button id="clearInkBtn" type="button" class="secondary">Handschrift löschen</button>
@@ -112,7 +103,6 @@
       </div>
     </div>
 
-    <!-- Vergleich (kommt erst nach "Lösung anzeigen") -->
     <div id="compareBlock" class="panel hidden">
       <h3>Vergleich</h3>
 
@@ -130,6 +120,39 @@
           <img id="learnAImg" class="bigImg" alt="">
           <div id="learnAImgEmpty" class="previewEmpty">(kein Lösungs-Bild)</div>
         </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- MANAGE TAB -->
+  <section id="tabManage" class="tab-panel">
+    <h2>Verwalten</h2>
+
+    <div class="row">
+      <button id="refreshManageBtn" type="button" class="secondary">🔄 Aktualisieren</button>
+      <button id="deleteSelectedBtn" type="button">🗑️ Ausgewählte löschen</button>
+      <div class="muted" id="manageStatus"></div>
+    </div>
+
+    <div class="manageLayout">
+      <div class="panel">
+        <h3>Kartenliste</h3>
+        <div id="manageList" class="manageList"></div>
+      </div>
+
+      <div class="panel">
+        <h3>Vorschau</h3>
+        <div class="muted" id="managePreviewHint">Wähle links eine Karte aus.</div>
+
+        <h4>Frage</h4>
+        <div id="prevQText" class="latex"></div>
+        <img id="prevQImg" class="bigImg" alt="">
+        <div id="prevQImgEmpty" class="previewEmpty">(kein Frage-Bild)</div>
+
+        <h4>Lösung</h4>
+        <div id="prevAText" class="latex"></div>
+        <img id="prevAImg" class="bigImg" alt="">
+        <div id="prevAImgEmpty" class="previewEmpty">(kein Lösungs-Bild)</div>
       </div>
     </div>
   </section>
