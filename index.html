@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <title>Lernkarten</title>
+
+  <!-- PWA -->
+  <link rel="manifest" href="manifest.json">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- Styles -->
+  <link rel="stylesheet" href="style.css">
+
+  <!-- MathJax (LaTeX) -->
+  <script>
+    window.MathJax = {
+      tex: { inlineMath: [['$', '$'], ['\\(', '\\)']] },
+      svg: { fontCache: 'global' }
+    };
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+</head>
+<body>
+
+<header>
+  <h1>📚 Lernkarten</h1>
+</header>
+
+<main>
+  <!-- Karte erstellen -->
+  <section>
+    <h2>Karte erstellen</h2>
+
+    <label>Frage (Text / LaTeX):</label>
+    <textarea id="qText"></textarea>
+
+    <label>Frage-Bild:</label>
+    <input type="file" id="qImage" accept="image/*">
+
+    <label>Lösung (Text / LaTeX):</label>
+    <textarea id="aText"></textarea>
+
+    <label>Lösungs-Bild:</label>
+    <input type="file" id="aImage" accept="image/*">
+
+    <button onclick="saveCard()">💾 Karte speichern</button>
+  </section>
+
+  <hr>
+
+  <!-- Lernen -->
+  <section>
+    <h2>Lernen</h2>
+    <button onclick="nextCard()">▶ Nächste Karte</button>
+
+    <div class="card">
+      <div class="card-side">
+        <h3>Frage</h3>
+        <div id="learnQuestion" class="latex"></div>
+        <img id="learnQImg">
+      </div>
+
+      <div class="card-side">
+        <h3>Lösung</h3>
+        <div id="learnAnswer" class="latex"></div>
+        <img id="learnAImg">
+      </div>
+    </div>
+  </section>
+</main>
+
+<script src="app.js"></script>
+</body>
+</html>

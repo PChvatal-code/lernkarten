@@ -1,0 +1,58 @@
+body {
+  font-family: system-ui, sans-serif;
+  margin: 0;
+  background: #f6f6f6;
+}
+
+header {
+  background: #222;
+  color: white;
+  padding: 1rem;
+  text-align: center;
+}
+
+main {
+  padding: 1rem;
+  max-width: 1000px;
+  margin: auto;
+}
+
+textarea {
+  width: 100%;
+  min-height: 100px;
+  margin-bottom: 1rem;
+}
+
+input[type="file"] {
+  margin-bottom: 1.5rem;
+}
+
+button {
+  padding: 0.6rem 1.2rem;
+  font-size: 1rem;
+}
+
+.card {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.card-side {
+  background: white;
+  padding: 1rem;
+  border-radius: 8px;
+}
+
+.card-side img {
+  width: 100%;
+  max-height: 450px;   /* 🔥 großes Bildfeld */
+  object-fit: contain;
+  margin-top: 1rem;
+  background: #eee;
+}
+
+.latex {
+  font-size: 1.1rem;
+}
