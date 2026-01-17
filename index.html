@@ -102,4 +102,39 @@
         <textarea id="userAnswer" placeholder="Antwort eingeben..."></textarea>
 
         <details>
-          <summary><strong>Handschrift-Pad (Apple Pencil)
+          <summary><strong>Handschrift-Pad (Apple Pencil)</strong> – optional</summary>
+          <p class="muted">Hier kannst du frei schreiben/zeichnen. Beim Vergleich wird dein Bild angezeigt.</p>
+          <canvas id="inkCanvas" width="900" height="320"></canvas>
+          <div class="row">
+            <button id="clearInkBtn" type="button" class="secondary">Handschrift löschen</button>
+          </div>
+        </details>
+      </div>
+    </div>
+
+    <!-- Vergleich (kommt erst nach "Lösung anzeigen") -->
+    <div id="compareBlock" class="panel hidden">
+      <h3>Vergleich</h3>
+
+      <div class="compareGrid">
+        <div class="compareSide">
+          <h4>Deine Antwort</h4>
+          <div id="compareUserText" class="latex"></div>
+          <img id="compareUserInk" class="bigImg" alt="">
+          <div id="compareUserInkEmpty" class="previewEmpty">(keine Handschrift)</div>
+        </div>
+
+        <div class="compareSide">
+          <h4>Lösung</h4>
+          <div id="learnAnswer" class="latex"></div>
+          <img id="learnAImg" class="bigImg" alt="">
+          <div id="learnAImgEmpty" class="previewEmpty">(kein Lösungs-Bild)</div>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<script src="app.js"></script>
+</body>
+</html>
