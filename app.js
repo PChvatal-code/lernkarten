@@ -42,6 +42,10 @@ function makeId() {
   );
 }
 
+function persist() {
+  localStorage.setItem("cards", JSON.stringify(cards));
+}
+
 function updateCount() {
   el("countLabel").textContent = `Gespeicherte Karten: ${cards.length}`;
   if (el("manageStatus")) el("manageStatus").textContent = `Karten: ${cards.length}`;
@@ -114,7 +118,6 @@ qImage.addEventListener("change", async () => {
 });
 
 aImage.addEventListener("change", async () => {
-  // 🔥 das war bei dir sehr wahrscheinlich kaputt (falsche ID oder fehlendes Element)
   pendingAImg = await updatePreview(aImage, aPreview, aPreviewEmpty);
 });
 
@@ -122,7 +125,6 @@ saveBtn.addEventListener("click", async () => {
   const qT = qText.value.trim();
   const aT = aText.value.trim();
 
-  // Falls User extrem schnell klickt
   if (qImage.files[0] && !pendingQImg) pendingQImg = await fileToDataURL(qImage.files[0]);
   if (aImage.files[0] && !pendingAImg) pendingAImg = await fileToDataURL(aImage.files[0]);
 
@@ -143,7 +145,7 @@ saveBtn.addEventListener("click", async () => {
     aImg: pendingAImg
   });
 
-  localStorage.setItem("cards", JSON.stringify(cards));
+  persist();
 
   // Reset
   qText.value = "";
@@ -310,8 +312,6 @@ function showSolution() {
   }
 
   showLatex(learnAnswer, currentCard.aText || "(keine Text-Lösung)");
-
-  // 🔥 hier muss das Lösungsbild gesetzt werden
   setImg(learnAImg, learnAImgEmpty, currentCard.aImg);
 }
 
@@ -319,7 +319,7 @@ nextBtn.addEventListener("click", nextCard);
 solutionBtn.addEventListener("click", showSolution);
 clearAnswerBtn.addEventListener("click", () => { userAnswer.value = ""; clearInk(); });
 
-// ---------- Manage (Löschen) ----------
+// ---------- Manage (Löschen + Export/Import) ----------
 const refreshManageBtn = el("refreshManageBtn");
 const deleteSelectedBtn = el("deleteSelectedBtn");
 const manageStatus = el("manageStatus");
@@ -332,6 +332,10 @@ const prevQImg = el("prevQImg");
 const prevAImg = el("prevAImg");
 const prevQImgEmpty = el("prevQImgEmpty");
 const prevAImgEmpty = el("prevAImgEmpty");
+
+// Export/Import DOM
+const exportBtn = el("exportBtn");
+const importFile = el("importFile");
 
 function renderManageList() {
   manageList.innerHTML = "";
@@ -402,7 +406,7 @@ function deleteCardById(id) {
   if (!confirm(msg)) return;
 
   cards = cards.filter(c => c.id !== id);
-  localStorage.setItem("cards", JSON.stringify(cards));
+  persist();
 
   if (currentCard && currentCard.id === id) {
     currentCard = null;
@@ -415,12 +419,81 @@ function deleteCardById(id) {
 }
 
 refreshManageBtn.addEventListener("click", renderManageList);
+
 deleteSelectedBtn.addEventListener("click", () => {
   if (!selectedManageId) {
     alert("Bitte zuerst links eine Karte auswählen.");
     return;
   }
   deleteCardById(selectedManageId);
+});
+
+// ---------- Export ----------
+exportBtn.addEventListener("click", () => {
+  const payload = {
+    version: 1,
+    exportedAt: new Date().toISOString(),
+    cards: cards
+  };
+
+  const blob = new Blob([JSON.stringify(payload, null, 2)], { type: "application/json" });
+  const url = URL.createObjectURL(blob);
+
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = "lernkarten-backup.json";
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+
+  URL.revokeObjectURL(url);
+});
+
+// ---------- Import ----------
+importFile.addEventListener("change", async () => {
+  const file = importFile.files && importFile.files[0];
+  if (!file) return;
+
+  try {
+    const text = await file.text();
+    const data = JSON.parse(text);
+
+    const imported = Array.isArray(data) ? data : data.cards; // erlaubt auch: nur Liste
+    if (!Array.isArray(imported)) throw new Error("Ungültiges Format.");
+
+    // Merge ohne Duplikate (über id)
+    const existingIds = new Set(cards.map(c => c.id));
+    let added = 0;
+
+    for (const c of imported) {
+      if (!c || typeof c !== "object") continue;
+
+      const normalized = {
+        id: c.id || makeId(),
+        qText: c.qText || "",
+        aText: c.aText || "",
+        qImg: c.qImg || null,
+        aImg: c.aImg || null
+      };
+
+      if (!existingIds.has(normalized.id)) {
+        cards.push(normalized);
+        existingIds.add(normalized.id);
+        added++;
+      }
+    }
+
+    persist();
+    updateCount();
+    renderManageList();
+
+    alert(`Import fertig. Hinzugefügt: ${added}`);
+  } catch (e) {
+    alert("Import fehlgeschlagen: " + e.message);
+  } finally {
+    // wichtig, damit man die gleiche Datei erneut auswählen kann
+    importFile.value = "";
+  }
 });
 
 // ---------- Init ----------

@@ -131,8 +131,19 @@
     <div class="row">
       <button id="refreshManageBtn" type="button" class="secondary">🔄 Aktualisieren</button>
       <button id="deleteSelectedBtn" type="button">🗑️ Ausgewählte löschen</button>
+
+      <button id="exportBtn" type="button" class="secondary">⬇️ Export</button>
+      <label class="importLabel">
+        ⬆️ Import
+        <input id="importFile" type="file" accept="application/json">
+      </label>
+
       <div class="muted" id="manageStatus"></div>
     </div>
+
+    <p class="muted">
+      Tipp: Export am PC → Datei nach iCloud Drive/AirDrop → Import am iPad.
+    </p>
 
     <div class="manageLayout">
       <div class="panel">
